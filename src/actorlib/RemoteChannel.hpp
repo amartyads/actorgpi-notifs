@@ -108,7 +108,7 @@ template<typename T, int capacity> std::vector<T> RemoteChannel <std::vector<T>,
     //read from no of datablock offset
     uint64_t bytesUsed;
     gpi_util::wait_for_queue_entries(&queue_id, 1);
-    ASSERT (gaspi_read ( 4, 0
+    ASSERT (gaspi_read_notify ( 4, 0
                         , this->remoteRank, 5, ((this->fixedDataOffset * this->maxQueueSize) + queueLocation) *sizeof(uint64_t)
                         , sizeof(uint64_t), notif, queue_id, GASPI_BLOCK
                         )
