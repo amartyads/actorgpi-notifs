@@ -74,6 +74,8 @@ template <typename T, int capacity> RemoteChannel<T, capacity>::RemoteChannel(Ac
     gaspi_number_t queue_num;
     ASSERT (gaspi_queue_num(&queue_num));
     queue_id = gpi_util::get_local_rank() % MAX(queue_num,1);
+    if(queue_id > queue_num)
+        queue_id = 0;
     pulledDataoffset = -1;
     this->initialized = false;
 }
@@ -89,6 +91,8 @@ template <typename T, int capacity> RemoteChannel<std::vector<T>, capacity>::Rem
     gaspi_number_t queue_num;
     ASSERT (gaspi_queue_num(&queue_num));
     queue_id = gpi_util::get_local_rank() % MAX(queue_num,1);
+    if(queue_id > queue_num)
+        queue_id = 0;
     pulledDataoffset = -1;
     this->initialized = false;
     //std::cout << "Max queue: " << this->maxQueueSize << " cur queue: " << this->curQueueSize << std::endl;
