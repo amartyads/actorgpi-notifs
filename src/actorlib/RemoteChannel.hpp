@@ -58,6 +58,10 @@ public:
 #define ASSERT(ec) gpi_util::success_or_exit(__FILE__,__LINE__,ec)
 #endif
 
+#ifndef MAX
+#define MAX(a,b) (a>b?a:b)
+#endif
+
 
 template <typename T, int capacity> RemoteChannel<T, capacity>::RemoteChannel(ActorConnectionType currConnectionType, uint64_t srcID, uint64_t dstID)
 {
@@ -69,7 +73,7 @@ template <typename T, int capacity> RemoteChannel<T, capacity>::RemoteChannel(Ac
     queueLocation = 0;
     gaspi_number_t queue_num;
     ASSERT (gaspi_queue_num(&queue_num));
-    queue_id = gpi_util::get_local_rank() % queue_num;
+    queue_id = gpi_util::get_local_rank() % MAX(queue_num,1);
     pulledDataoffset = -1;
     this->initialized = false;
 }
@@ -84,7 +88,7 @@ template <typename T, int capacity> RemoteChannel<std::vector<T>, capacity>::Rem
     queueLocation = 0;
     gaspi_number_t queue_num;
     ASSERT (gaspi_queue_num(&queue_num));
-    queue_id = gpi_util::get_local_rank() % queue_num;
+    queue_id = gpi_util::get_local_rank() % MAX(queue_num,1);
     pulledDataoffset = -1;
     this->initialized = false;
     //std::cout << "Max queue: " << this->maxQueueSize << " cur queue: " << this->curQueueSize << std::endl;
