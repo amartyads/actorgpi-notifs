@@ -26,8 +26,8 @@
 #define ASSERT(ec) gpi_util::success_or_exit(__FILE__,__LINE__,ec)
 #endif
 
-#ifndef MAX
-#define MAX(a,b) (a>b?a:b)
+#ifndef NMAX
+#define NMAX(a,b) ((a)>(b)?(a):(b))
 #endif
 
 ActorGraph::ActorGraph() : ActorGraph(0,1) { }
@@ -416,18 +416,18 @@ void ActorGraph::finalizeInitialization()
 	segmentIDDatabank = 3;
 	segmentIDLocalCache = 4;
 	segmentIDRemoteVecSize = 5;
-	//gaspi_printf("Segment no 0 size %" PRIu64 "\n",MAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen);
-	gasptrRemoteLookup = gpi_util::create_segment_return_ptr(segmentIDRemoteLookup, MAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen); // will have databank offset (minBlockSize * fixedOffset)
-	//gaspi_printf("Segment no 1 size %" PRIu64 "\n",MAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen);
-	gasptrLocalClear = gpi_util::create_segment_return_ptr(segmentIDLocalClear, MAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen); // will paste tha read databank offset
-	//gaspi_printf("Segment no 2 size %" PRIu64 "\n", MAX(noRemoteLocalChannels,1) * sizeof(uint64_t) * dataQueueLen);
-	gasptrLocalTrigger = gpi_util::create_segment_return_ptr(segmentIDLocalTrigger, MAX(noRemoteLocalChannels,1) * sizeof(uint64_t) * dataQueueLen);	//will paste dstID
+	//gaspi_printf("Segment no 0 size %" PRIu64 "\n",NMAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen);
+	gasptrRemoteLookup = gpi_util::create_segment_return_ptr(segmentIDRemoteLookup, NMAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen); // will have databank offset (minBlockSize * fixedOffset)
+	//gaspi_printf("Segment no 1 size %" PRIu64 "\n",NMAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen);
+	gasptrLocalClear = gpi_util::create_segment_return_ptr(segmentIDLocalClear, NMAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen); // will paste tha read databank offset
+	//gaspi_printf("Segment no 2 size %" PRIu64 "\n", NMAX(noRemoteLocalChannels,1) * sizeof(uint64_t) * dataQueueLen);
+	gasptrLocalTrigger = gpi_util::create_segment_return_ptr(segmentIDLocalTrigger, NMAX(noRemoteLocalChannels,1) * sizeof(uint64_t) * dataQueueLen);	//will paste dstID
 	//gaspi_printf("Segment no 3 size %" PRIu64 "\n", fullSizeOfSpace);
 	gasptrDatabank = gpi_util::create_segment_return_ptr(segmentIDDatabank, fullSizeOfSpace);
 	//gaspi_printf("Segment no 4 size %" PRIu64 "\n", maxIncomingBlockSize);
 	gasptrLocalCache = gpi_util::create_segment_return_ptr(segmentIDLocalCache, maxIncomingBlockSize);
-	//gaspi_printf("Segment no 5 size %" PRIu64 "\n",MAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen);
-	gasptrRemoteVecSize = gpi_util::create_segment_return_ptr(segmentIDRemoteVecSize, MAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen); // will have size of vector
+	//gaspi_printf("Segment no 5 size %" PRIu64 "\n",NMAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen);
+	gasptrRemoteVecSize = gpi_util::create_segment_return_ptr(segmentIDRemoteVecSize, NMAX(noLocalRemoteChannels,1) * sizeof(uint64_t) * dataQueueLen); // will have size of vector
 
 	//std::cout << "rank " <<threadRank << " segs made" <<std::endl;
 	//reset lookup table

@@ -58,8 +58,8 @@ public:
 #define ASSERT(ec) gpi_util::success_or_exit(__FILE__,__LINE__,ec)
 #endif
 
-#ifndef MAX
-#define MAX(a,b) (a>b?a:b)
+#ifndef NMAX
+#define NMAX(a,b) ((a)>(b)?(a):(b))
 #endif
 
 
@@ -73,7 +73,7 @@ template <typename T, int capacity> RemoteChannel<T, capacity>::RemoteChannel(Ac
     queueLocation = 0;
     gaspi_number_t queue_num;
     ASSERT (gaspi_queue_num(&queue_num));
-    queue_id = gpi_util::get_local_rank() % MAX(queue_num,1);
+    queue_id = gpi_util::get_local_rank() % NMAX(queue_num,1);
     if(queue_id > queue_num)
         queue_id = 0;
     pulledDataoffset = -1;
@@ -90,7 +90,7 @@ template <typename T, int capacity> RemoteChannel<std::vector<T>, capacity>::Rem
     queueLocation = 0;
     gaspi_number_t queue_num;
     ASSERT (gaspi_queue_num(&queue_num));
-    queue_id = gpi_util::get_local_rank() % MAX(queue_num,1);
+    queue_id = gpi_util::get_local_rank() % NMAX(queue_num,1);
     if(queue_id > queue_num)
         queue_id = 0;
     pulledDataoffset = -1;
