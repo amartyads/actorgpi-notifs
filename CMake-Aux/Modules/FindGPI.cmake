@@ -16,7 +16,7 @@ FIND_PATH(
 )
 
 FIND_LIBRARY( GPI_LIBRARIES
-  NAMES libGPI2.a
+  NAMES libGPI2-dbg.a
   HINTS ${GPI_DIR}/lib64
 )
 
