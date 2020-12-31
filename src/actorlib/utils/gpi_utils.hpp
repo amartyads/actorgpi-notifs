@@ -68,6 +68,7 @@ namespace gpi_util
 	{
 		gaspi_number_t queue_size_max, queue_size, queue_num;
 		success_or_exit(__FILE__, __LINE__, gaspi_queue_size_max(&queue_size_max));
+		success_or_exit(__FILE__, __LINE__, gaspi_queue_num(&queue_num));
 		success_or_exit(__FILE__, __LINE__, gaspi_queue_size(*queue, &queue_size));
 
 		if(!(queue_size + wanted_entries <= queue_size_max))
