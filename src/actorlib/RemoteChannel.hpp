@@ -464,13 +464,14 @@ template <typename T, int capacity> uint64_t RemoteChannel <std::vector<T>, capa
 {
     //std::cout << this->fixedDataOffset << " " << queueLocation << " rem " << this->remoteRank << std::endl;
     //gaspi read databank offset
+    gaspi_notification_id_t notif = 0;
     gpi_util::wait_for_queue_entries(&queue_id, 1);
-    ASSERT (gaspi_read ( 4, 0
+    ASSERT (gaspi_read_notify ( 4, 0
                         , this->remoteRank, 0, (this->fixedDataOffset * this->maxQueueSize) *sizeof(int64_t)
-                        , this->maxQueueSize * sizeof(int64_t), queue_id, GASPI_BLOCK
+                        , this->maxQueueSize * sizeof(int64_t), notif, queue_id, GASPI_BLOCK
                         )
             );
-    ASSERT (gaspi_wait (queue_id, GASPI_BLOCK));
+    gpi_util::wait_notif_or_exit(4, notif, 1);
     int totElements = 0;
     //std::stringstream ss;
     //ss << "At dest " << this->dstID << ":";
