@@ -90,13 +90,14 @@ template<typename T, int capacity> std::vector<T> RemoteChannel <std::vector<T>,
 {
     //data availability already checked
     //std::cout << "in pull Max queue: " << this->maxQueueSize << " cur queue: " << this->curQueueSize << std::endl;
+    gaspi_notification_id_t notif = 0;
     gpi_util::wait_for_queue_entries(&queue_id, 1);
-    ASSERT (gaspi_read ( 4, 0
+    ASSERT (gaspi_read_notify ( 4, 0
                         , this->remoteRank, 0, ((this->fixedDataOffset * this->maxQueueSize) + queueLocation) *sizeof(uint64_t)
-                        , sizeof(uint64_t), queue_id, GASPI_BLOCK
+                        , sizeof(uint64_t), notif, queue_id, GASPI_BLOCK
                         )
             );
-    ASSERT (gaspi_wait (queue_id, GASPI_BLOCK));
+    gpi_util::wait_notif_or_exit(4, notif, 1);
     pulledDataoffset = ((int64_t *)(this->cachePtr))[0];
     //std::cout << pulledDataoffset << std::endl;
 
@@ -109,10 +110,10 @@ template<typename T, int capacity> std::vector<T> RemoteChannel <std::vector<T>,
     gpi_util::wait_for_queue_entries(&queue_id, 1);
     ASSERT (gaspi_read ( 4, 0
                         , this->remoteRank, 5, ((this->fixedDataOffset * this->maxQueueSize) + queueLocation) *sizeof(uint64_t)
-                        , sizeof(uint64_t), queue_id, GASPI_BLOCK
+                        , sizeof(uint64_t), notif, queue_id, GASPI_BLOCK
                         )
             );
-    ASSERT (gaspi_wait (queue_id, GASPI_BLOCK));
+    gpi_util::wait_notif_or_exit(4, notif, 1);
     bytesUsed = ((uint64_t *)(this->cachePtr))[0];
 
     //calc no of datablocks
@@ -129,12 +130,12 @@ template<typename T, int capacity> std::vector<T> RemoteChannel <std::vector<T>,
     for(uint64_t i = 0; i < this->noOfDatablocksUsed; i++)
     {
         gpi_util::wait_for_queue_entries(&queue_id, 1);
-        ASSERT (gaspi_read ( 4, 0
+        ASSERT (gaspi_read_notify ( 4, 0
                             , this->remoteRank, 3, copyOfPulledDataOffset
-                            , this->minBlockSize, queue_id, GASPI_BLOCK
+                            , this->minBlockSize, notif, queue_id, GASPI_BLOCK
                             )
                 );
-        ASSERT (gaspi_wait (queue_id, GASPI_BLOCK));
+        gpi_util::wait_notif_or_exit(4, notif, 1);
         for(uint64_t j = 0; j < (vecSize < elemsPerFullCache ? vecSize : elemsPerFullCache); j++)
         {
             readData.push_back(((T *)(this->cachePtr))[j]);

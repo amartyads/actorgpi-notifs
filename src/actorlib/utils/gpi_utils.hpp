@@ -91,6 +91,21 @@ namespace gpi_util
 	      success_or_exit (__FILE__, __LINE__, gaspi_wait (queue_id, GASPI_BLOCK));
 	    }
 	}
+	static void wait_notif_or_exit ( gaspi_segment_id_t segment_id,
+									gaspi_notification_id_t notification_id,
+									gaspi_notification_t expected)
+	{
+		gaspi_notification_id_t id;
+		success_or_exit (__FILE__, __LINE__, gaspi_notify_waitsome(segment_id, notification_id, 1, &id, GASPI_BLOCK));
+		if(id != notification_id)
+			throw std::runtime_error("ID not equal to notification ID");
+		
+		gaspi_notification_t value;
+		success_or_exit (__FILE__, __LINE__, gaspi_notify_reset(segment_id, id, &value));
+		if(value != expected)
+			throw std::runtime_error("Unexpected notification value");
+		
+	}
 	static bool test_notif_or_exit ( gaspi_segment_id_t segment_id,
 									gaspi_notification_id_t notification_id,
 									gaspi_notification_t expected)
